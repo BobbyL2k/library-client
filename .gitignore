@@ -1,0 +1,4 @@
+
+scripts/react/build/.module-cache/*
+
+npm-debug.log
