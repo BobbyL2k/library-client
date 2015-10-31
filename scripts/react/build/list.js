@@ -36,7 +36,6 @@ BookInfo = React.createClass({displayName: "BookInfo",
 	render: function(){
 		var book = this.props.book;
 		var children = [];
-		console.log("book",book);
 		for(key in book){
 			children.push((React.createElement("dt", {key: children.length}, key)));
 			children.push((React.createElement("dd", {key: children.length}, book[key])));
@@ -53,14 +52,14 @@ BookTable = React.createClass({displayName: "BookTable",
 	render: function(){
 		var list = this.props.list,
 			visibleIndex = this.props.visibleIndex,
-			selectedBookId = this.props.selectedBookId;
+			selectedId = this.props.selectedId;
 		var reactList = [],
 			reactIndex = [];
 		for (var c = 0; c < visibleIndex.length; c++) {
 			reactIndex[c] = (React.createElement("th", {key: c}, visibleIndex[c]));
 		};
 		for (var c = 0; c < list.length; c++) {
-			var selected = (list[c].id == selectedBookId);
+			var selected = (list[c].id == selectedId);
 			reactList[c] = (React.createElement(BookTableContent, {key: c, book: list[c], visibleIndex: visibleIndex, selected: selected, onClick: this.props.onClickBook}));
 		};
 		return (

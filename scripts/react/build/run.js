@@ -18,6 +18,7 @@ function toggleReturnModal(){
 }
 
 var g_borrower_list_to_display = [];
+var g_currentBorrowerData = {};
 
 var to_sync = {
 	borrower:"",
@@ -35,7 +36,7 @@ var g_bookData = {
 	value: {},
 	initialized: false,
 	set: function(bookData){
-		if(!bookData.visibleIndex || !bookData.searchableIndex || !bookData.book){
+		if(!bookData.visibleIndex || !bookData.searchableIndex || !bookData.book || !bookData.borrowerList){
 			throw "bookData data is incomplete";
 		}
 		g_bookData.value = bookData;
@@ -71,10 +72,10 @@ var g_bookData = {
 		if(!g_bookData.initialized)
 			throw "g_bookData not initialized"
 		var resultList = [];
-		for(var c=0; c<g_bookData.borrowerList.length; c++){
-			var borrowerData = g_bookData.borrower_list[c];
-			if(borrowerData.bookId){
-				resultList.push(bookData);
+		for(var c=0; c<g_bookData.value.borrowerList.length; c++){
+			var borrowerData = g_bookData.value.borrowerList[c];
+			if(borrowerData.bookId == bookId){
+				resultList.push(borrowerData);
 			}
 		}
 		return resultList;
@@ -112,7 +113,7 @@ var g_currentBook = {
 		}
 	},
 	setId: function (currentBookId){
-		console.log("Setting Selected Book ID:", currentBookId);
+		// console.log("Setting Selected Book ID:", currentBookId);
 		if(g_currentBook.value === undefined || g_currentBook.value.id != currentBookId){
 			var all_book = g_bookData.getAllBook();
 			for (var c = all_book.length - 1; c >= 0; c--) {
@@ -125,7 +126,7 @@ var g_currentBook = {
 		else{
 			g_currentBook.value = undefined;
 		}
-		console.log("Selected Book:", g_currentBook.value);
+		// console.log("Selected Book:", g_currentBook.value);
 		re_render_book_table();
 	}
 };
@@ -202,12 +203,14 @@ function search_input(domElement){
 }
 
 function return_book_button_pressed(){
-	var data = bookData.getBorrowerList(g_currentBook.getCurrentBook());
-	g_borrower_list_to_display = data.borrower_list;
+	console.log('return_book_button_pressed called');
+	g_borrower_list_to_display = g_bookData.getBorrowerList(g_currentBook.getCurrentBook().id);
+	console.log('g_borrower_list_to_display',g_borrower_list_to_display);
 	toggleReturnModal();
 }
 
 function re_render_book_table(newSearchTerm){
+	console.log("Re-Rendering");
 	if(newSearchTerm != undefined)
 		g_last_search_value = newSearchTerm;
 	var searchTerm = g_last_search_value;
@@ -216,7 +219,7 @@ function re_render_book_table(newSearchTerm){
 		React.createElement(BookTable, {
 			visibleIndex: g_bookData.getVisibleIndex(), 
 			list: g_bookData.getBookToShow(searchTerm), 
-			selectedBookId: g_currentBook.getCurrentBookIdNoCheck(searchTerm), 
+			selectedId: g_currentBook.getCurrentBookIdNoCheck(searchTerm), 
 			onClickBook: g_currentBook.setId}),
 		document.getElementById('book-table-container')
 	);
@@ -236,20 +239,28 @@ function re_render_book_table(newSearchTerm){
 		),
 		document.getElementById('button-container')
 	);
-	console.log("currentBook", currentBook);
 	React.render(
 		React.createElement("div", null, React.createElement(BookInfo, {book: currentBook})),
 		document.getElementById('book-details'));
 	var style = {};
-	if(g_show_borrow_modal){
+	if(g_show_borrow_modal | g_show_return_modal){
 		style = {display:"block"};
 	}
 	else{
 		style = {display:"none"};
 	}
+	console.log('g_borrower_list_to_display', g_borrower_list_to_display);
 	borrower_input_box = (React.createElement(SyncingTextField, {placeholder: "ใส่ชื่อ หรือ รหัสประจำตัว", object: to_sync, property: "borrower"}));
-	returner_input_box = (React.createElement(SyncingTextField, {placeholder: "ค้นหา", object: to_sync, property: "returner"}));
-	React.render(
+	returner_selection_table = (React.createElement(ReactSelectableTable, {
+			visibleIndex: ['bookId', 'borrower', 'time'], 
+			list: g_borrower_list_to_display, 
+			selectedObject: g_currentBorrowerData, 
+			setObjectCallback: function(object){
+				console.log(object, 'selected from table selection');
+				g_currentBorrowerData = object;
+				re_render_book_table();
+			}}));
+	React.render( 
 		React.createElement("div", {style: style}, 
 		React.createElement(Modal, {
 			header: "ลงชื่อผู้ยืม", 
@@ -263,7 +274,7 @@ function re_render_book_table(newSearchTerm){
 			show: g_show_return_modal, 
 			acceptCallback: return_book, 
 			closeCallback: toggleReturnModal}, 
-			returner_input_box/**/
+			returner_selection_table
 		)
 		),
 		document.getElementById('modal-container')
@@ -301,12 +312,15 @@ function return_book(){
 		},
 		"data":{
 			"bookId":currentBook,
-			"borrower":to_sync.returner
+			"borrower":g_currentBorrowerData.borrower
 		}
 	}
 	request = JSON.stringify(request);
-	console.log("Returning book ID:"+currentBook);
-	$.postJSON( getServerAddress("/return"), request, checkResponse);
+	console.log("Returning book ID:",currentBook);
+	console.log("Returned by borrower:",g_currentBorrowerData.borrower);
+	$.postJSON( getServerAddress("/return"), request, function (res) {
+		checkResponse(res, toggleReturnModal);
+	} );
 }
 
 function checkResponse(res, callback){

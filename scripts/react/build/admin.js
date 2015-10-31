@@ -1,13 +1,16 @@
+var C_ADMIN_ADD_BOOK_URL = "http://0.0.0.0:3000/add";
+
 var formObjectData = {};
 
 function submitFormData(){
+	console.log("submitFormData");
 	$.post(C_ADMIN_ADD_BOOK_URL, formObjectData, function(data){
 		console.log(data);
 	})
 }
 
 (function () {
-	var bookDetails = [
+	var formDetails = [
 	{
 		label:'ชื่อเรื่องหลัก',
 		placeholder:'Name'
@@ -51,7 +54,7 @@ function submitFormData(){
 	];
 
 	React.render(
-		React.createElement(ReactForm, {bookDetails: bookDetails, object: formObjectData, submitLabel: 'เพิ่มหนังสือ'}),
+		React.createElement(ReactForm, {formDetails: formDetails, object: formObjectData, submitLabel: 'เพิ่มหนังสือ', onSubmit: submitFormData}),
 		document.getElementById("react-form")
 	);
 })();

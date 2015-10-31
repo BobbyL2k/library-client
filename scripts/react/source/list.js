@@ -36,7 +36,6 @@ BookInfo = React.createClass({
 	render: function(){
 		var book = this.props.book;
 		var children = [];
-		console.log("book",book);
 		for(key in book){
 			children.push((<dt key={children.length}>{key}</dt>));
 			children.push((<dd key={children.length}>{book[key]}</dd>));
@@ -53,14 +52,14 @@ BookTable = React.createClass({
 	render: function(){
 		var list = this.props.list,
 			visibleIndex = this.props.visibleIndex,
-			selectedBookId = this.props.selectedBookId;
+			selectedId = this.props.selectedId;
 		var reactList = [],
 			reactIndex = [];
 		for (var c = 0; c < visibleIndex.length; c++) {
 			reactIndex[c] = (<th key={c}>{visibleIndex[c]}</th>);
 		};
 		for (var c = 0; c < list.length; c++) {
-			var selected = (list[c].id == selectedBookId);
+			var selected = (list[c].id == selectedId);
 			reactList[c] = (<BookTableContent key={c} book={list[c]} visibleIndex={visibleIndex} selected={selected} onClick={this.props.onClickBook}/>);
 		};
 		return (
