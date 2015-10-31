@@ -2,11 +2,24 @@
 <html lang="th">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <link rel="stylesheet" href="scripts/libs/bootstrap.min.css">
+  <style type="text/css">
+  #modal-container > div{
+  	display: none;
+  	position: absolute;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+  	height: 100%;
+  	padding: 20% 10%;
+  	z-index: 1;
+  }
+  </style>
 </head>
 <body>
 	<script src="scripts/libs/jquery-2.1.4.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+  <script src="scripts/lib.js"></script>
+ 	<script src="scripts/libs/bootstrap.min.js"></script>
 	<script src="scripts/libs/react-0.13.0.js"></script>
 	<script src="scripts/react/build/list.js"></script>
   <div class="container">
@@ -24,7 +37,7 @@
         </div>
       </div>
 
-      <div class="col-xs-12" style="margin-top: 20px;" id="book-table-container">
+      <div class="col-xs-8" style="margin-top: 20px;" id="book-table-container">
         <table class="table table-responsive table-bordered">
           <thead>
             <tr>
@@ -62,14 +75,67 @@
           </tbody>
         </table>
       </div>
-      <div class="col-xs-12 text-right" id="button-container">
-       
-        <div class="btn btn-primary" onclick="borrow_book()">ยืมหนังสือ</div>
-        <div class="btn btn-danger" onclick="return_book()">คืนหนังสือ</div>
+      <div class="col-xs-4">
+      	<div style="margin-top:20px;"></div>
+      	<p3>รายละเอียดหนังสือ</p3>
+      	<hr>
+        <div>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xs-12" id="book-details">
+            	<dl class="dl-horizontal">
+            		<dt>ชื่อหนังสือ</dt>
+            		<dd>test2</dd>
+            		<dt>ผู้แต่ง</dt>
+            		<dd>test2</dd>
+            		<dt>ผู้ช่วยแต่ง</dt>
+            		<dd>test2</dd>
+            		<dt>ผู้เขียน</dt>
+            		<dd>test2</dd>
+            		<dt>ISBN</dt>
+            		<dd>test2</dd>
+            	</dl>
+            </div>
+          </div>
+        </div>
+        <div>
+      	<div class="text-center">
+        <div id="button-container" class="container-fluid">
+          <div class="row text-center" id="button-container">
+            <div class="col-xs-12 col-md-6" style="margin-top:20px;">
+              <div class="btn btn-primary" data-toggle="modal" data-target="#borrowModal">ยืมหนังสือ</div>
+            </div>
+            <div class="col-xs-12 col-md-6" style="margin-top:20px;">
+              <div class="btn btn-danger" data-toggle="modal" data-target="#returnModal">คืนหนังสือ</div>
+            </div>
+          </div>
+        </div>
+		  </div>
       </div>
     </div>
   </div>
+  <div id="modal-container">
+	  <!-- Modal -->
+		<div id="borrowModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
+
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Modal Header</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>Some text in the modal.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+
+		  </div>
+		</div>
+  </div>
 	<script src="scripts/react/build/run.js"></script>
-  <script src="scripts/main.js"></script>
 </body>
 </html>
