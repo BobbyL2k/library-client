@@ -12,7 +12,7 @@ BookTableContent = React.createClass({
 		if(selected){
 			className = "success";
 		}
-		if(book.count == 0){
+		if(book.left == 0){
 			className = "danger";
 		}
 		if(selected && book.count == 0){
@@ -31,6 +31,22 @@ BookTableContent = React.createClass({
 			);
 	}
 })
+
+BookEdit = React.createClass({
+	render: function(){
+		var book = this.props.book;
+		var children = [];
+		for(key in book){
+			children.push((<dt key={children.length}>{key}</dt>));
+			children.push((<dd key={children.length}><SyncingTextField2 placeholder="" object={this.props.book} property={key}/></dd>));
+		}
+		return (
+      	<dl className="dl-horizontal">
+      		{children}
+      	</dl>
+      	);
+	}
+});
 
 BookInfo = React.createClass({
 	render: function(){
@@ -102,6 +118,19 @@ SyncingTextField = React.createClass({
 	}
 });
 
+SyncingTextField2 = React.createClass({
+	onChange: function(event){
+		var lastValue = event.target.value;
+		console.log(lastValue);
+		this.props.object[this.props.property] = lastValue;
+		re_render_book_table();
+	},
+	render: function(){
+		var placeholder = this.props.placeholder;
+		return (<input type="text" className="form-control" value={this.props.object[this.props.property]} placeholder={placeholder} onChange={this.onChange}/>)
+	}
+});
+
 Modal = React.createClass({
 	accept: function(){
 		this.props.acceptCallback();
@@ -136,4 +165,40 @@ Modal = React.createClass({
 			</div>
 		);
 	}
-})
+});
+
+ModalWarning = React.createClass({
+	accept: function(){
+		this.props.acceptCallback();
+	},
+	close: function() {
+		this.props.closeCallback();
+	},
+	render: function() {
+		var header = this.props.header,
+			show = this.props.show;
+		var style = {};
+		if(show){
+			style = {display:"block"};
+		}else{
+			style = {display:"none"};
+		}
+		if(header === undefined)
+			header = '';
+		return (
+			<div className="modal-content" style={style}>
+				<div className="modal-header">
+					<button type="button" className="close" onClick={this.close}>&times;</button>
+					<h4 className="modal-title">{header}</h4>
+				</div>
+				<div className="modal-body">
+					{this.props.children}
+				</div>
+				<div className="modal-footer">
+					<button type="button" className="btn btn-danger" onClick={this.accept}>ลบหนังสือ</button>
+					<button type="button" className="btn btn-default" onClick={this.close}>ยกเลิก</button>
+				</div>
+			</div>
+		);
+	}
+});

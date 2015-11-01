@@ -14,9 +14,6 @@
   	padding: 20% 10%;
   	z-index: 1;
   }
-  .bs-example{
-    margin: 20px;
-  }
   </style>
 </head>
 <body>
@@ -24,8 +21,130 @@
   <script src="scripts/lib.js"></script>
  	<script src="scripts/libs/bootstrap.min.js"></script>
 	<script src="scripts/libs/react-0.13.0.js"></script>
-	<script src="scripts/react/build/form.js"></script>
-  <div class="bs-example" id="react-form"></div>
-  <script src="scripts/react/build/admin.js"></script>
+	<script src="scripts/react/build/list.js"></script>
+  <script src="scripts/react/build/form.js"></script>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>ระบบจัดการหนังสือ</h1>
+        <hr>
+      </div>
+      <div class="col-xs-12">
+        <a href="index.html"><div class="btn btn-primary" style="margin-bottom:20px;" data-toggle="modal" data-target="#returnModal">กลับสู่ระบบ ยืม-คืน</div></a>
+        <a href="add.html"><div class="btn btn-default" style="margin-bottom:20px;" data-toggle="modal" data-target="#returnModal">เพิ่มหนังสือ</div></a>
+      </div>
+      <div class="col-xs-12">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search for..." onkeyup="search_input(this)">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">Search</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="col-xs-5">
+        <div style="margin-top:20px;"></div>
+        <p3>รายละเอียดหนังสือ</p3>
+        <hr>
+        <div>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-xs-12" id="book-details">
+              <dl class="dl-horizontal">
+                <dt>ชื่อหนังสือ</dt>
+                <dd>test2</dd>
+                <dt>ผู้แต่ง</dt>
+                <dd>test2</dd>
+                <dt>ผู้ช่วยแต่ง</dt>
+                <dd>test2</dd>
+                <dt>ผู้เขียน</dt>
+                <dd>test2</dd>
+                <dt>ISBN</dt>
+                <dd>test2</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div>
+        <div class="text-center">
+        <div id="button-container" class="container-fluid">
+          <div class="row text-center" id="button-container">
+            <div class="col-xs-12 col-md-6" style="margin-top:20px;">
+              <div class="btn btn-primary" data-toggle="modal" data-target="#borrowModal">ยืนยันการแก้ไข</div>
+            </div>
+            <div class="col-xs-12 col-md-6" style="margin-top:20px;">
+              <div class="btn btn-danger" data-toggle="modal" data-target="#returnModal">ลบหนังสือออก</div>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+      </div>
+    </div>
+  </div>
+
+      <div class="col-xs-7 table-responsive" style="margin-top: 20px;" id="book-table-container">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="col-xs-1">Heading 1</th>
+              <th>Heading 2</th>
+              <th>Heading 3</th>
+              <th>Heading 4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center"><input type="checkbox"></td>
+              <td>name 2</td>
+              <td>name 3</td>
+              <td>name 4</td>
+            </tr>
+            <tr>
+              <td class="text-center"><input type="checkbox"></td>
+              <td>name 2</td>
+              <td>name 3</td>
+              <td>name 4</td>
+            </tr>
+            <tr>
+              <td class="text-center"><input type="checkbox"></td>
+              <td>name 2</td>
+              <td>name 3</td>
+              <td>name 4</td>
+            </tr>
+            <tr>
+              <td class="text-center"><input type="checkbox"></td>
+              <td>name 2</td>
+              <td>name 3</td>
+              <td>name 4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+
+  <div id="modal-container">
+	  <!-- Modal -->
+		<div id="borrowModal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
+
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Modal Header</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>Some text in the modal.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+
+		  </div>
+		</div>
+  </div>
+	<script src="scripts/react/build/admin.js"></script>
 </body>
 </html>

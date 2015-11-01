@@ -12,7 +12,7 @@ BookTableContent = React.createClass({displayName: "BookTableContent",
 		if(selected){
 			className = "success";
 		}
-		if(book.count == 0){
+		if(book.left == 0){
 			className = "danger";
 		}
 		if(selected && book.count == 0){
@@ -31,6 +31,22 @@ BookTableContent = React.createClass({displayName: "BookTableContent",
 			);
 	}
 })
+
+BookEdit = React.createClass({displayName: "BookEdit",
+	render: function(){
+		var book = this.props.book;
+		var children = [];
+		for(key in book){
+			children.push((React.createElement("dt", {key: children.length}, key)));
+			children.push((React.createElement("dd", {key: children.length}, React.createElement(SyncingTextField2, {placeholder: "", object: this.props.book, property: key}))));
+		}
+		return (
+      	React.createElement("dl", {className: "dl-horizontal"}, 
+      		children
+      	)
+      	);
+	}
+});
 
 BookInfo = React.createClass({displayName: "BookInfo",
 	render: function(){
@@ -102,6 +118,19 @@ SyncingTextField = React.createClass({displayName: "SyncingTextField",
 	}
 });
 
+SyncingTextField2 = React.createClass({displayName: "SyncingTextField2",
+	onChange: function(event){
+		var lastValue = event.target.value;
+		console.log(lastValue);
+		this.props.object[this.props.property] = lastValue;
+		re_render_book_table();
+	},
+	render: function(){
+		var placeholder = this.props.placeholder;
+		return (React.createElement("input", {type: "text", className: "form-control", value: this.props.object[this.props.property], placeholder: placeholder, onChange: this.onChange}))
+	}
+});
+
 Modal = React.createClass({displayName: "Modal",
 	accept: function(){
 		this.props.acceptCallback();
@@ -136,4 +165,40 @@ Modal = React.createClass({displayName: "Modal",
 			)
 		);
 	}
-})
+});
+
+ModalWarning = React.createClass({displayName: "ModalWarning",
+	accept: function(){
+		this.props.acceptCallback();
+	},
+	close: function() {
+		this.props.closeCallback();
+	},
+	render: function() {
+		var header = this.props.header,
+			show = this.props.show;
+		var style = {};
+		if(show){
+			style = {display:"block"};
+		}else{
+			style = {display:"none"};
+		}
+		if(header === undefined)
+			header = '';
+		return (
+			React.createElement("div", {className: "modal-content", style: style}, 
+				React.createElement("div", {className: "modal-header"}, 
+					React.createElement("button", {type: "button", className: "close", onClick: this.close}, "×"), 
+					React.createElement("h4", {className: "modal-title"}, header)
+				), 
+				React.createElement("div", {className: "modal-body"}, 
+					this.props.children
+				), 
+				React.createElement("div", {className: "modal-footer"}, 
+					React.createElement("button", {type: "button", className: "btn btn-danger", onClick: this.accept}, "ลบหนังสือ"), 
+					React.createElement("button", {type: "button", className: "btn btn-default", onClick: this.close}, "ยกเลิก")
+				)
+			)
+		);
+	}
+});

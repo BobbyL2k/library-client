@@ -1,4 +1,4 @@
-var c_server_address = "http://0.0.0.0";
+var c_server_address = "http://127.0.0.1";
 var c_server_port = "3000";
 var c_server_prefix = "library";
 
@@ -74,7 +74,7 @@ var g_bookData = {
 		var resultList = [];
 		for(var c=0; c<g_bookData.value.borrowerList.length; c++){
 			var borrowerData = g_bookData.value.borrowerList[c];
-			if(borrowerData.bookId == bookId){
+			if(borrowerData.id == bookId){
 				resultList.push(borrowerData);
 			}
 		}
@@ -83,6 +83,7 @@ var g_bookData = {
 };
 var g_currentBook = {
 	value: undefined,
+	all_book_ref: {},
 	getCurrentBook: function (searchTerm){
 		if(g_currentBook.value !== undefined && book_search_match(searchTerm, g_currentBook.value))
 			return g_currentBook.value;
@@ -174,6 +175,8 @@ function process_data(data) {
 		throw "Books of new bookData is not found";
 	}
 	g_bookData.set(data);
+	if(g_currentBook.value !== undefined)
+		g_currentBook.setId(g_currentBook.value.id);
 	re_render_book_table();
 }
 
@@ -228,12 +231,12 @@ function re_render_book_table(newSearchTerm){
 		React.createElement("div", null, 
 		React.createElement(EventButton, {
 			className: "btn-primary", 
-			disabled: currentBook==undefined || currentBook.count == 0, 
+			disabled: currentBook==undefined || currentBook.left == 0, 
 			buttonName: "ยืมหนังสือ", 
 			onClick: toggleBorrowModal}), 
 		React.createElement(EventButton, {
 			className: "btn-danger", 
-			disabled: currentBook==undefined || currentBook.count == currentBook.maxCount, 
+			disabled: currentBook==undefined || currentBook.left == currentBook.totalBook, 
 			buttonName: "คืนหนังสือ", 
 			onClick: return_book_button_pressed})
 		),
@@ -252,7 +255,7 @@ function re_render_book_table(newSearchTerm){
 	console.log('g_borrower_list_to_display', g_borrower_list_to_display);
 	borrower_input_box = (React.createElement(SyncingTextField, {placeholder: "ใส่ชื่อ หรือ รหัสประจำตัว", object: to_sync, property: "borrower"}));
 	returner_selection_table = (React.createElement(ReactSelectableTable, {
-			visibleIndex: ['bookId', 'borrower', 'time'], 
+			visibleIndex: ['borrower', 'time'], 
 			list: g_borrower_list_to_display, 
 			selectedObject: g_currentBorrowerData, 
 			setObjectCallback: function(object){
@@ -319,7 +322,11 @@ function return_book(){
 	console.log("Returning book ID:",currentBook);
 	console.log("Returned by borrower:",g_currentBorrowerData.borrower);
 	$.postJSON( getServerAddress("/return"), request, function (res) {
-		checkResponse(res, toggleReturnModal);
+		checkResponse(res, function(){
+			toggleReturnModal();
+			main();
+		});
+
 	} );
 }
 

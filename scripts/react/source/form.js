@@ -1,5 +1,9 @@
 FormGroup = React.createClass({
 	onChange: function(event) {
+		if(this.props.validator){
+			console.log('validate from', event.target.value, 'to', this.props.validator(event.target.value));
+			event.target.value = this.props.validator(event.target.value);
+		}
 		this.props.object[this.props.label] = event.target.value;
 	},
 	render: function() {
@@ -15,18 +19,26 @@ FormGroup = React.createClass({
 })
 
 ReactForm = React.createClass({
+	onClickSubmit: function() {
+		this.props.onSubmit();
+	},
+	onClickCancel: function() {
+		this.props.onCancel();
+	},
 	render: function() {
 		var formDetails = this.props.formDetails;
 		var reactFormGroup = [];
-		var submitLabel = this.props.submitLabel;
+		var submitLabel = this.props.submitLabel,
+			cancelLabel = this.props.cancelLabel;
 		for(var c=0; c<formDetails.length; c++){
-			reactFormGroup.push(<FormGroup key={c} label={formDetails[c].label} placeholder={formDetails[c].placeholder} object={this.props.object} />);
+			reactFormGroup.push(<FormGroup key={c} label={formDetails[c].label} placeholder={formDetails[c].placeholder} validator={formDetails[c].validator} object={this.props.object} />);
 		}
 		return (
-			<form>
+			<div>
 				{reactFormGroup}
-		        <button type="submit" className="btn btn-primary" onClick={this.onClick}>{submitLabel}</button>
-		    </form>
+		        <button type="submit" className="btn btn-primary" onClick={this.onClickSubmit}>{submitLabel}</button>
+		        <button type="cancel" className="btn btn-danger" onClick={this.onClickCancel}>{cancelLabel}</button>
+		    </div>
 		);
 	}
 });
