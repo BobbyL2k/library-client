@@ -4,7 +4,7 @@ FormGroup = React.createClass({displayName: "FormGroup",
 			console.log('validate from', event.target.value, 'to', this.props.validator(event.target.value));
 			event.target.value = this.props.validator(event.target.value);
 		}
-		this.props.object[this.props.label] = event.target.value;
+		this.props.object[this.props.property] = event.target.value;
 	},
 	render: function() {
 		var label = this.props.label,
@@ -29,9 +29,29 @@ ReactForm = React.createClass({displayName: "ReactForm",
 		var formDetails = this.props.formDetails;
 		var reactFormGroup = [];
 		var submitLabel = this.props.submitLabel,
-			cancelLabel = this.props.cancelLabel;
+			cancelLabel = this.props.cancelLabel,
+			displayIndex = {};
+
+		if(this.props.displayIndex)
+			displayIndex = this.props.displayIndex;
+		var indexToUse = [];
 		for(var c=0; c<formDetails.length; c++){
-			reactFormGroup.push(React.createElement(FormGroup, {key: c, label: formDetails[c].label, placeholder: formDetails[c].placeholder, validator: formDetails[c].validator, object: this.props.object}));
+			var temp = formDetails[c].label;
+			if(displayIndex[formDetails[c].label])
+				temp = displayIndex[formDetails[c].label];
+			indexToUse.push(temp);
+		}
+
+		var labels = [];
+
+		for(var c=0; c<formDetails.length; c++){
+			var labelToAdd = formDetails[c].label;
+			if(displayIndex[labelToAdd])
+				labelToAdd = displayIndex[labelToAdd];
+			labels.push(labelToAdd);
+		}
+		for(var c=0; c<formDetails.length; c++){
+			reactFormGroup.push(React.createElement(FormGroup, {key: c, property: formDetails[c].label, label: indexToUse[c], placeholder: formDetails[c].placeholder, validator: formDetails[c].validator, object: this.props.object}));
 		}
 		return (
 			React.createElement("div", null, 

@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS borrowList(
+  id INTEGER NOT NULL,
+  borrower TEXT NOT NULL,
+  time TEXT NOT NULL
+);

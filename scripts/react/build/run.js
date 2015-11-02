@@ -221,6 +221,7 @@ function re_render_book_table(newSearchTerm){
 	React.render(
 		React.createElement(BookTable, {
 			visibleIndex: g_bookData.getVisibleIndex(), 
+			displayIndex: g_bookData.value.displayIndex, 
 			list: g_bookData.getBookToShow(searchTerm), 
 			selectedId: g_currentBook.getCurrentBookIdNoCheck(searchTerm), 
 			onClickBook: g_currentBook.setId}),
@@ -243,7 +244,7 @@ function re_render_book_table(newSearchTerm){
 		document.getElementById('button-container')
 	);
 	React.render(
-		React.createElement("div", null, React.createElement(BookInfo, {book: currentBook})),
+		React.createElement("div", null, React.createElement(BookInfo, {book: currentBook, displayIndex: g_bookData.value.displayIndex})),
 		document.getElementById('book-details'));
 	var style = {};
 	if(g_show_borrow_modal | g_show_return_modal){

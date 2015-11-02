@@ -15,7 +15,8 @@ function submitFormData(){
 (function () {
 	$.getJSON(C_GET_COLUMN_URL, function(list) {
 		var formDetails = list.map(function (content) {
-			if(content == 'publishedYear'){
+			var numberContent = ['left','totalBook','publishedYear'];
+			if(numberContent.indexOf(content) != -1){
 				return {
 					label:content,
 					placeholder:'ตัวเลข',
@@ -31,9 +32,23 @@ function submitFormData(){
 			}
 			return {label:content, placeholder:content};
 		});
-
+		var displayIndex = {
+	        "bookName":"ชื่อหนัง",
+	        "bookSubname":"ชื่อ อื่นๆ",
+	        "author":"ผู้แต่ง",
+	        "subAuthor":"ผู้แต่งรอง",
+	        "translator":"ผู้แปล",
+	        "edition":"ครั้งที่พิมพ์",
+	        "left":"มีเหลือ",
+	        "totalBook":"มีทั้งหมด",
+	        "publisher":"สำนักพิมพ์",
+	        "publishedYear":"ปีพิมพ์",
+	        "ISBN":"ISBN",
+	        "dewey":"dewey",
+	        "category":"หมวดหมู่"
+		}
 		React.render(
-			React.createElement(ReactForm, {formDetails: formDetails, object: formObjectData, submitLabel: 'เพิ่มหนังสือ', onSubmit: submitFormData, cancelLabel: 'ยกเลิก', onCancel: function() {
+			React.createElement(ReactForm, {formDetails: formDetails, displayIndex: displayIndex, object: formObjectData, submitLabel: 'เพิ่มหนังสือ', onSubmit: submitFormData, cancelLabel: 'ยกเลิก', onCancel: function() {
 				window.location = 'admin.html';
 			}}),
 			document.getElementById("react-form")

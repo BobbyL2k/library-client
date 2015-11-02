@@ -34,10 +34,20 @@ BookTableContent = React.createClass({
 
 BookEdit = React.createClass({
 	render: function(){
+		var displayIndexMapper = {}
+		if(this.props.displayIndex){
+			displayIndexMapper = this.props.displayIndex;
+			console.log("BookInfo", displayIndexMapper);
+		}
 		var book = this.props.book;
 		var children = [];
 		for(key in book){
-			children.push((<dt key={children.length}>{key}</dt>));
+			if(key == 'id')
+				continue;
+			var displayIndex = key;
+			if(displayIndexMapper[key])
+				displayIndex = displayIndexMapper[key];
+			children.push((<dt key={children.length}>{displayIndex}</dt>));
 			children.push((<dd key={children.length}><SyncingTextField2 placeholder="" object={this.props.book} property={key}/></dd>));
 		}
 		return (
@@ -50,10 +60,20 @@ BookEdit = React.createClass({
 
 BookInfo = React.createClass({
 	render: function(){
+		var displayIndexMapper = {}
+		if(this.props.displayIndex){
+			displayIndexMapper = this.props.displayIndex;
+			console.log("BookInfo", displayIndexMapper);
+		}
 		var book = this.props.book;
 		var children = [];
 		for(key in book){
-			children.push((<dt key={children.length}>{key}</dt>));
+			if(key == 'id')
+				continue;
+			var displayIndex = key;
+			if(displayIndexMapper[key])
+				displayIndex = displayIndexMapper[key];
+			children.push((<dt key={children.length}>{displayIndex}</dt>));
 			children.push((<dd key={children.length}>{book[key]}</dd>));
 		}
 		return (
@@ -71,8 +91,12 @@ BookTable = React.createClass({
 			selectedId = this.props.selectedId;
 		var reactList = [],
 			reactIndex = [];
+		console.log(this.props.displayIndex);
 		for (var c = 0; c < visibleIndex.length; c++) {
-			reactIndex[c] = (<th key={c}>{visibleIndex[c]}</th>);
+			var displayIndex = visibleIndex[c];
+			if(this.props.displayIndex !== undefined && this.props.displayIndex[visibleIndex[c]] !== undefined)
+				displayIndex = this.props.displayIndex[visibleIndex[c]];
+			reactIndex[c] = (<th key={c}>{displayIndex}</th>);
 		};
 		for (var c = 0; c < list.length; c++) {
 			var selected = (list[c].id == selectedId);

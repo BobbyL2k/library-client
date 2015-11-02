@@ -31,7 +31,7 @@ var g_bookData = {
 	value: {},
 	initialized: false,
 	set: function(bookData){
-		if(!bookData.visibleIndex || !bookData.searchableIndex || !bookData.book || !bookData.borrowerList){
+		if(!bookData.visibleIndex || !bookData.searchableIndex || !bookData.book || !bookData.borrowerList || !bookData.displayIndex){
 			throw "bookData data is incomplete";
 		}
 		g_bookData.value = bookData;
@@ -245,6 +245,7 @@ function re_render_book_table(newSearchTerm){
 	React.render(
 		React.createElement(BookTable, {
 			visibleIndex: g_bookData.getVisibleIndex(), 
+			displayIndex: g_bookData.value.displayIndex, 
 			list: g_bookData.getBookToShow(searchTerm), 
 			selectedId: g_currentBook.getCurrentBookIdNoCheck(searchTerm), 
 			onClickBook: clicked_on_book_to_edit}),
@@ -267,7 +268,9 @@ function re_render_book_table(newSearchTerm){
 		document.getElementById('button-container')
 	);
 	React.render(
-		React.createElement("div", null, React.createElement(BookEdit, {book: new_book_from_edit})),
+		React.createElement("div", null, React.createElement(BookEdit, {
+		book: new_book_from_edit, 
+		displayIndex: g_bookData.value.displayIndex})),
 		document.getElementById('book-details'));
 	var style = {};
 	if(g_show_delete_modal){

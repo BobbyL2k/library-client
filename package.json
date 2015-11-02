@@ -2,14 +2,15 @@
   "name": "Lib",
   "version": "1.0.0",
   "description": "",
-  "main": "index.html",
+  "main": "preload.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "window": {
     // "toolbar": false,
     "width": 800,
-    "height": 600
+    "height": 600,
+    "title": "Library manager"
   },
   "author": "",
   "license": "MIT",

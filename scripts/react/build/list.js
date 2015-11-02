@@ -34,10 +34,20 @@ BookTableContent = React.createClass({displayName: "BookTableContent",
 
 BookEdit = React.createClass({displayName: "BookEdit",
 	render: function(){
+		var displayIndexMapper = {}
+		if(this.props.displayIndex){
+			displayIndexMapper = this.props.displayIndex;
+			console.log("BookInfo", displayIndexMapper);
+		}
 		var book = this.props.book;
 		var children = [];
 		for(key in book){
-			children.push((React.createElement("dt", {key: children.length}, key)));
+			if(key == 'id')
+				continue;
+			var displayIndex = key;
+			if(displayIndexMapper[key])
+				displayIndex = displayIndexMapper[key];
+			children.push((React.createElement("dt", {key: children.length}, displayIndex)));
 			children.push((React.createElement("dd", {key: children.length}, React.createElement(SyncingTextField2, {placeholder: "", object: this.props.book, property: key}))));
 		}
 		return (
@@ -50,10 +60,20 @@ BookEdit = React.createClass({displayName: "BookEdit",
 
 BookInfo = React.createClass({displayName: "BookInfo",
 	render: function(){
+		var displayIndexMapper = {}
+		if(this.props.displayIndex){
+			displayIndexMapper = this.props.displayIndex;
+			console.log("BookInfo", displayIndexMapper);
+		}
 		var book = this.props.book;
 		var children = [];
 		for(key in book){
-			children.push((React.createElement("dt", {key: children.length}, key)));
+			if(key == 'id')
+				continue;
+			var displayIndex = key;
+			if(displayIndexMapper[key])
+				displayIndex = displayIndexMapper[key];
+			children.push((React.createElement("dt", {key: children.length}, displayIndex)));
 			children.push((React.createElement("dd", {key: children.length}, book[key])));
 		}
 		return (
@@ -71,8 +91,12 @@ BookTable = React.createClass({displayName: "BookTable",
 			selectedId = this.props.selectedId;
 		var reactList = [],
 			reactIndex = [];
+		console.log(this.props.displayIndex);
 		for (var c = 0; c < visibleIndex.length; c++) {
-			reactIndex[c] = (React.createElement("th", {key: c}, visibleIndex[c]));
+			var displayIndex = visibleIndex[c];
+			if(this.props.displayIndex !== undefined && this.props.displayIndex[visibleIndex[c]] !== undefined)
+				displayIndex = this.props.displayIndex[visibleIndex[c]];
+			reactIndex[c] = (React.createElement("th", {key: c}, displayIndex));
 		};
 		for (var c = 0; c < list.length; c++) {
 			var selected = (list[c].id == selectedId);
