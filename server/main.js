@@ -1,15 +1,43 @@
 var spawn = require('child_process').spawn;
 var lib;
-module.exports = function(callback){
-	var libraryServer = lib =spawn("node",["./server/server.js"]);
+function main(callback){
+	var libraryServer = lib =spawn("node",[__dirname + "/server.js"]);
+	var isAlive = true;
 	libraryServer.stdout.on('data', function (data) {
-	console.log(data);
-	  callback();
+	  callback(data);
 	});
 	libraryServer.stderr.on('data',function(data){
 		console.log("error:" + data);
 	})
+	var intervalId =
+	setInterval(function(){//Heartbeat
+		if(isAlive)
+			libraryServer.stdin.write("x");
+		else
+			clearInterval(intervalId);
+	},500);
+	libraryServer.on('exit',resurrect);
+	libraryServer.on('error',resurrect);
+	function resurrect(){
+		console.log("Server downed");
+		isAlive = false;
+		console.log("Restarting..");
+		libraryServer.kill();
+		process.nextTick(run);
+	}
 }
-process.on('exit', function() {
-  lib.kill();
-});
+exports.run = run = function(callback){
+	var born = 0;
+	main(function(data){
+		if(born==0&&callback)callback();
+		born=1;
+		//each heartbe
+	});
+}
+console.log(__filename);
+console.log(process.cwd());
+if(require.main === module) {
+		run(function(){
+			console.log("server started");
+		});
+}
